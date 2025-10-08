@@ -2,14 +2,23 @@ from flask import Flask, render_template, request
 import numpy as np
 import joblib
 import pandas as pd
+import os
+import warnings
+
+# Suppress scikit-learn warnings
+warnings.filterwarnings('ignore', category=UserWarning)
 
 app = Flask(__name__)
 
-# Load trained model
-model = joblib.load('model.pkl')
-
-# Get feature names directly from model (Random Forest has feature_names_in_)
-features = list(model.feature_names_in_)
+# Load trained model with memory optimization
+try:
+    model = joblib.load('model.pkl')
+    features = list(model.feature_names_in_)
+    print(f"Model loaded successfully with {len(features)} features")
+except Exception as e:
+    print(f"Error loading model: {e}")
+    model = None
+    features = []
 
 @app.route('/')
 def home():
@@ -18,6 +27,10 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        # Check if model is loaded
+        if model is None:
+            return render_template('result.html', prediction="Error: Model not loaded")
+        
         # Get input data from form
         carat = float(request.form['carat'])
         cut = request.form['cut']
@@ -38,30 +51,13 @@ def predict():
         color = color_map.get(color, 0)
         clarity = clarity_map.get(clarity, 0)
 
-        # Input data dict
-        data_dict = {
-            'carat': carat,
-            'cut': cut,
-            'color': color,
-            'clarity': clarity,
-            'depth': depth,
-            'table': table,
-            'x': x,
-            'y': y,
-            'z': z
-        }
-
-        # Create DataFrame only with expected features (extra ignored)
-        input_data = pd.DataFrame([[data_dict.get(f, 0) for f in features]], columns=features)
-
-        # Debug print (optional)
-        print("Model expects:", features)
-        print("Input columns:", input_data.columns.tolist())
+        # Create input array directly (more memory efficient than DataFrame)
+        input_data = np.array([[carat, cut, color, clarity, depth, table, x, y, z]])
 
         # Predict
         prediction = model.predict(input_data)
 
-        # Extract float value from numpy array (Random Forest returns 1D array)
+        # Extract float value from numpy array
         prediction_value = float(prediction[0])
         prediction_value = round(prediction_value, 2)
 
@@ -71,4 +67,5 @@ def predict():
         return render_template('result.html', prediction=f"Error: {str(e)}")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
