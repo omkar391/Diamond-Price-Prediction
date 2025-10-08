@@ -127,7 +127,8 @@ Add screenshots of your web pages here
 
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/9d599faf-e51e-423a-9727-e398928118b2" /> 
 templates/index.html — Input Page
-<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/00553149-849e-44f0-a629-df04f2a4f789" />
+<img width="1130" height="816" alt="image" src="https://github.com/user-attachments/assets/00588d46-d062-4b4a-948d-7d98b88a93bd" />
+
  templates/result.html — Prediction Output
 
 
