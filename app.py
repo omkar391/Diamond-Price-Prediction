@@ -8,8 +8,8 @@ app = Flask(__name__)
 # Load trained model
 model = joblib.load('model.pkl')
 
-# Get feature names directly from model (safe)
-features = list(model.feature_names_in_) if hasattr(model, 'feature_names_in_') else joblib.load('model_features.pkl')
+# Get feature names directly from model (Random Forest has feature_names_in_)
+features = list(model.feature_names_in_)
 
 @app.route('/')
 def home():
@@ -61,7 +61,7 @@ def predict():
         # Predict
         prediction = model.predict(input_data)
 
-        # Extract float value from numpy array
+        # Extract float value from numpy array (Random Forest returns 1D array)
         prediction_value = float(prediction[0])
         prediction_value = round(prediction_value, 2)
 
