@@ -43,19 +43,21 @@ Users can input diamond features via a web form and instantly get the **predicte
 ## 🏗️ Project Structure
 DiamondPricePrediction/
 │
-├── app.py # Main Flask application
-├── model.pkl # Trained ML model
-├── model_features.pkl # Saved feature names
+├── app.py                     # Main Flask application
 │
-├── templates/
-│ ├── index.html # Input form page
-│ └── result.html # Prediction result page
+├── model.pkl                  # Trained Machine Learning model
+├── model_features.pkl         # Saved feature names used during training
 │
-├── static/
-│ ├── style.css # Optional CSS styles
+├── templates/                 # HTML templates for frontend
+│   ├── index.html             # Input form page for user data
+│   └── result.html            # Page displaying prediction results
 │
-├── README.md # Project documentation
-└── requirements.txt # Python dependencies
+├── static/                    # Static files (CSS, JS, images)
+│   └── style.css              # Optional stylesheet for custom design
+│
+├── README.md                  # Project documentation
+└── requirements.txt           # Python dependencies
+
 
 
 
